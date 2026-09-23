@@ -1,5 +1,6 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { isDummyEnv as detectDummyEnv } from '@/lib/env';
 
 const TEN_YEARS = 60 * 60 * 24 * 365 * 10;
 
@@ -11,8 +12,9 @@ export async function updateSession(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key';
 
-  // 만약 URL/KEY가 템플릿 기본값이면 미들웨어에서 리다이렉트만 안전하게 처리
-  const isDummyEnv = !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('your-supabase-project');
+  // 로컬 개발(Supabase 미연결)에서만 인증을 건너뛴다. 운영 빌드에서는 환경변수가
+  // 없더라도 false가 되어 아래 인증 검사를 정상적으로 타게 된다(lib/env.ts 참고).
+  const isDummyEnv = detectDummyEnv();
 
   let user = null;
 

@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { isDummyEnv } from '@/lib/env';
 
 export type InquiryStatus = 'pending' | 'in_progress' | 'resolved';
 export type InquiryCategory =
@@ -28,11 +29,6 @@ export interface CounselorInquiry {
   assigned_to: string | null;
   resolved_by: string | null;
   resolved_at: string | null;
-}
-
-function isDummyEnv() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  return !url || url.includes('your-supabase-project');
 }
 
 // 개발/오프라인 환경(Supabase 미연결)용 목업 시드 데이터

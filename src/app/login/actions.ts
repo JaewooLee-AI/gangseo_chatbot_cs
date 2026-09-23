@@ -2,11 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
-
-function isDummyEnv() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  return !url || url.includes('your-supabase-project');
-}
+import { isDummyEnv } from '@/lib/env';
 
 // OTP 이메일 발송 액션
 export async function sendOtpAction(email: string) {
